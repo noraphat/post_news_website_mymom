@@ -1,14 +1,22 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 import time
 import json
 import os
 import requests
 
+#Chrome Driver Download
+#https://googlechromelabs.github.io/chrome-for-testing/
+
+
+
 # ตั้งค่า WebDriver
+options = Options()
+options.add_argument("--log-level=3")  # ปิด log warning/error ของ Chrome
 service = Service("C:/ChromeWebDriver/chromedriver.exe")  # เปลี่ยน path ให้ตรงกับเครื่องคุณ
-driver = webdriver.Chrome(service=service)
+driver = webdriver.Chrome(service=service, options=options)
 
 # URL ของหน้า LINE VOOM
 url = "https://linevoom.line.me/user/_dVGZeasMp7vr0djZxioT2R00ZSTeY2iQFLoZ278"
@@ -18,7 +26,7 @@ time.sleep(5)  # รอให้หน้าโหลด
 
 # ฟังก์ชันดึงข้อมูลโพสต์
 def scrape_posts():
-    posts = driver.find_elements(By.CSS_SELECTOR, "article.generalPostLayout_feed_post__9CnYc")
+    posts = driver.find_elements(By.CSS_SELECTOR, "article.vw_feed_post")
     data = []
 
     for idx, post in enumerate(posts):
@@ -26,11 +34,13 @@ def scrape_posts():
             # ดึงข้อความในโพสต์
             content = post.find_element(By.CSS_SELECTOR, "div.text_viewer").text
             print(f"โพสต์ที่ {idx + 1}: {content}")
+            
 
             # ดึงรูปภาพในโพสต์
             images = post.find_elements(By.CSS_SELECTOR, "img.media_image")
             image_urls = [img.get_attribute("src") for img in images]
             print(f"รูปภาพในโพสต์ที่ {idx + 1}: {image_urls}")
+            print(f"จำนวนรูปที่เจอในโพสต์ที่ {idx + 1}: {len(images)}")
 
             # ดาวน์โหลดรูปภาพ
             image_folder = f"post_{idx + 1}_images"
