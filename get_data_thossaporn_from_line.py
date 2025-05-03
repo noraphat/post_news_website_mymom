@@ -26,7 +26,7 @@ time.sleep(5)  # รอให้หน้าโหลด
 
 # ฟังก์ชันดึงข้อมูลโพสต์
 def scrape_posts():
-    posts = driver.find_elements(By.CSS_SELECTOR, "article.vw_feed_post")
+    posts = driver.find_elements(By.CSS_SELECTOR, "article.vw_feed_post") #แก้ให้ตรงกับใน Line
     data = []
 
     for idx, post in enumerate(posts):
