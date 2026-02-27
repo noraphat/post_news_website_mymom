@@ -2,14 +2,19 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time, json, os, requests
 
+#Chrome Driver Download
+#https://googlechromelabs.github.io/chrome-for-testing/
+
 # --- ตั้งค่า WebDriver ------------------------------------------------------
 options = Options()
 options.add_argument("--log-level=3")
-service = Service(r"C:/ChromeWebDriver/chromedriver.exe")
+# service = Service(r"C:/ChromeWebDriver/chromedriver.exe")
+service = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service, options=options)
 
 url = "https://linevoom.line.me/user/_dVGZeasMp7vr0djZxioT2R00ZSTeY2iQFLoZ278"
@@ -44,7 +49,7 @@ def scroll_until_posts_loaded(target):
             last_height = new_height
 
 # ---------- ฟังก์ชันเก็บโพสต์ -----------------------------------------------
-def scrape_posts(num_posts=20):
+def scrape_posts(num_posts=70):
     scroll_until_posts_loaded(num_posts)
 
     posts = driver.find_elements(By.CSS_SELECTOR, "article.vw_feed_post")
@@ -82,6 +87,6 @@ def scrape_posts(num_posts=20):
     print(f"\nดึงข้อมูล {len(data)} โพสต์เสร็จแล้ว บันทึกเป็น posts_data.json")
 
 # ---------------- เรียกใช้งาน ------------------------------------------------
-scrape_posts(num_posts=10)     # อยากได้กี่โพสต์ก็เปลี่ยนตรงนี้
+scrape_posts(num_posts=31)     # อยากได้กี่โพสต์ก็เปลี่ยนตรงนี้
 
 driver.quit()
